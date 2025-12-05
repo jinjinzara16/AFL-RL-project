@@ -3,13 +3,13 @@
 # -----------------------------
 #
 # Written and maintained by Michal Zalewski <lcamtuf@google.com>
-# 
+#
 # Copyright 2013, 2014, 2015, 2016, 2017 Google LLC All rights reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
-# 
+#
 #   http://www.apache.org/licenses/LICENSE-2.0
 #
 
@@ -33,7 +33,7 @@ CFLAGS     += -Wall -D_FORTIFY_SOURCE=2 -g -Wno-pointer-sign \
 	      -DBIN_PATH=\"$(BIN_PATH)\"
 
 ifneq "$(filter Linux GNU%,$(shell uname))" ""
-  LDFLAGS  += -ldl
+  LDFLAGS  += -ldl -lm
 endif
 
 ifeq "$(findstring clang, $(shell $(CC) --version 2>/dev/null))" ""
@@ -70,7 +70,7 @@ afl-as: afl-as.c afl-as.h $(COMM_HDR) | test_x86
 	ln -sf afl-as as
 
 afl-fuzz: afl-fuzz.c $(COMM_HDR) | test_x86
-	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) afl-fuzz.c rl_client.c -o $@ $(LDFLAGS)
 
 afl-showmap: afl-showmap.c $(COMM_HDR) | test_x86
 	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS)
